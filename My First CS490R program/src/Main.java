@@ -254,23 +254,14 @@ public class Main extends JFrame {
         });
 
         JMenuItem gender = new JMenuItem("Gender");
-        reset.addActionListener(new ActionListener() {
+        gender.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                try {
+                Vis.showGender = !Vis.showGender;
 
-                    Connection conn = DriverManager.getConnection("jdbc:derby:/home/abigail/database/pollster");
-                    Statement stmt = conn.createStatement();
-                    //TODO reset bounds here
-
-                    contents.repaint();
-                    conn.close();
-                } catch (SQLException throwables) {
-
-                    throwables.printStackTrace();
-                }
+                contents.repaint();
             }
         });
 
