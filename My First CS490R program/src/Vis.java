@@ -1,24 +1,29 @@
 import javax.swing.*;
+import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.text.DecimalFormat;
-import java.awt.geom.Line2D;
-
+import java.awt.event.MouseEvent;
 import static java.awt.Color.*;
 
-public class Vis extends JPanel implements ActionListener {
+public class Vis extends JPanel implements ActionListener, MouseInputListener {
 
     public static int queryNumber;
     public float yMaxM; public float yMinM; public float xMaxM; public float xMinM;
     public float yMaxF; public float yMinF; public float xMaxF; public float xMinF;
     public float yMax; public float yMin; public float xMax; public float xMin;
     public static boolean showGender;
+    public static boolean collision;
+    public static float collisionX; public static float collisionY;
+    public float verticalLength; public float horizontalLength;
+    private Rectangle box;
+    private Point mouseDown;
+
 
     public Vis() {
         showGender = false;
+        addMouseListener(this);
+        addMouseMotionListener(this);
     }
 
     @Override
@@ -31,10 +36,8 @@ public class Vis extends JPanel implements ActionListener {
         g.drawLine(50,40,50,getHeight() - 75); //draw vertical axis
         g.drawLine(50,getHeight() - 75, getWidth() - 50,getHeight() - 75); //draw horizontal axis
 
-        float verticalLength = (getHeight() - 75) - 40;
-        float horizontalLength = (getWidth() - 50) - 50;
-
-        DecimalFormat df = new DecimalFormat("###.##");
+        verticalLength = (getHeight() - 75) - 40;
+        horizontalLength = (getWidth() - 50) - 50;
 
         if (queryNumber == 1) { //attempted vs passed
 
@@ -83,7 +86,14 @@ public class Vis extends JPanel implements ActionListener {
             g.setColor(BLACK);
             for (int i = 0; i < 5; i++) {
 
-                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50); //max 162 - why does it say infinity????????????????
+                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50);
+            }
+            g.drawString("0.0",50 ,getHeight() - 50);
+
+            //printing y axis labels
+            for (int i = 0; i < 5; i++) {
+
+                g.drawString(String.valueOf((i/4.0f)*yMax), 15,(int) (verticalLength - (verticalLength * (i/4.0f))+50));
             }
             g.drawString("0.0",50 ,getHeight() - 50);
         } else if (queryNumber == 2) { //attempted vs gpa
@@ -133,7 +143,14 @@ public class Vis extends JPanel implements ActionListener {
             g.setColor(BLACK);
             for (int i = 0; i < 5; i++) {
 
-                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50); //max 162 - why does it say infinity????????????????
+                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50);
+            }
+            g.drawString("0.0",50 ,getHeight() - 50);
+
+            //printing y axis labels
+            for (int i = 0; i < 5; i++) {
+
+                g.drawString(String.valueOf((i/4.0f)*yMax), 15,(int) (verticalLength - (verticalLength * (i/4.0f))+50));
             }
             g.drawString("0.0",50 ,getHeight() - 50);
         } else if (queryNumber == 3) { //passed vs gpa
@@ -183,7 +200,14 @@ public class Vis extends JPanel implements ActionListener {
             g.setColor(BLACK);
             for (int i = 0; i < 5; i++) {
 
-                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50); //max 162 - why does it say infinity????????????????
+                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50);
+            }
+            g.drawString("0.0",50 ,getHeight() - 50);
+
+            //printing y axis labels
+            for (int i = 0; i < 5; i++) {
+
+                g.drawString(String.valueOf((i/4.0f)*yMax), 15,(int) (verticalLength - (verticalLength * (i/4.0f))+50));
             }
             g.drawString("0.0",50 ,getHeight() - 50);
         } else if (queryNumber == 4) { //age vs gpa
@@ -233,7 +257,14 @@ public class Vis extends JPanel implements ActionListener {
             g.setColor(BLACK);
             for (int i = 0; i < 5; i++) {
 
-                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50); //max 162 - why does it say infinity????????????????
+                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50);
+            }
+            g.drawString("0.0",50 ,getHeight() - 50);
+
+            //printing y axis labels
+            for (int i = 0; i < 5; i++) {
+
+                g.drawString(String.valueOf((i/4.0f)*yMax), 15,(int) (verticalLength - (verticalLength * (i/4.0f))+50));
             }
             g.drawString("0.0",50 ,getHeight() - 50);
         } else if (queryNumber == 5) { //passed vs age
@@ -283,10 +314,135 @@ public class Vis extends JPanel implements ActionListener {
             g.setColor(BLACK);
             for (int i = 0; i < 5; i++) {
 
-                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50); //max 162 - why does it say infinity????????????????
+                g.drawString(String.valueOf((i/4.0f)*xMax), (int) ((horizontalLength * (i/4.0f))+50),getHeight() - 50);
+            }
+            g.drawString("0.0",50 ,getHeight() - 50);
+
+            //printing y axis labels
+            for (int i = 0; i < 5; i++) {
+
+                g.drawString(String.valueOf((i/4.0f)*yMax), 15,(int) (verticalLength - (verticalLength * (i/4.0f))+50));
             }
             g.drawString("0.0",50 ,getHeight() - 50);
         }
+
+        if (box != null) {
+
+            g.drawRect(box.x, box.y, box.width, box.height);
+            //g.draw(box);
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+        int x = e.getX();
+        int y = e.getY();
+        mouseDown = new Point(x,y);
+        box = new Rectangle();
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent) {
+
+        box = null;
+        repaint();
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+        box.setFrameFromDiagonal(mouseDown.x, mouseDown.y, e.getX(), e.getY());
+        repaint();
+    }
+
+    public void checkCollision(int x, int y) {
+
+        collision = false;
+        for (Point p: Main.pointsM.values()) {
+
+            float x_start = (((p.x/xMax)*horizontalLength) + 50);
+            float x_end = (((p.x/xMax)*horizontalLength) + 50) + (getHeight()/50);
+            float y_start = (getHeight() - 75 - (getHeight()/50) - ((p.y/yMax)*verticalLength));
+            float y_end = (getHeight() - 75 - (getHeight()/50) - ((p.y/yMax)*verticalLength)) + (getHeight()/50);
+
+            if (x >= x_start  && x <= x_end ) {
+
+                if (y >= y_start && y <= y_end) {
+
+                    collision = true;
+                    collisionX = p.x;
+                    collisionY = p.y;
+                }
+            }
+        }
+
+        for (Point p: Main.pointsF.values()) {
+
+            float x_start = (((p.x/xMax)*horizontalLength) + 50);
+            float x_end = (((p.x/xMax)*horizontalLength) + 50) + (getHeight()/50);
+            float y_start = (getHeight() - 75 - (getHeight()/50) - ((p.y/yMax)*verticalLength));
+            float y_end = (getHeight() - 75 - (getHeight()/50) - ((p.y/yMax)*verticalLength)) + (getHeight()/50);
+
+            if (x >= x_start  && x <= x_end ) {
+
+                if (y >= y_start && y <= y_end) {
+
+                    collision = true;
+                    collisionX = p.x;
+                    collisionY = p.y;
+                }
+            }
+        }
+    }
+
+    //adding tool tips to each point
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
+        int x = e.getX();
+        int y = e.getY();
+
+        checkCollision(x, y);
+
+        if (collision) {
+
+            if (queryNumber == 1) {
+
+                setToolTipText("Credits attempted: " + collisionX + " Credits passed: " + collisionY);
+            } else if (queryNumber == 2) {
+
+                setToolTipText("Credits attempted: " + collisionX + " GPA: " + collisionY);
+            } else if (queryNumber == 3) {
+
+                setToolTipText("Credits passed: " + collisionX + " GPA: " + collisionY);
+            } else if (queryNumber == 4) {
+
+                setToolTipText("Age: " + collisionX + " GPA: " + collisionY);
+            } else if (queryNumber == 5) {
+
+                setToolTipText("Credits passed: " + collisionX + " Age: " + collisionY);
+            }
+        } else {
+
+            setToolTipText(null);
+        }
     }
 }
+
 
