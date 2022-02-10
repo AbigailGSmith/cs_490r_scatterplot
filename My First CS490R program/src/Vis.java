@@ -33,6 +33,7 @@ public class Vis extends JPanel implements ActionListener, MouseInputListener {
 
     @Override
     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         g.drawLine(50,40,50,getHeight() - 75); //draw vertical axis
         g.drawLine(50,getHeight() - 75, getWidth() - 50,getHeight() - 75); //draw horizontal axis
 
@@ -328,8 +329,10 @@ public class Vis extends JPanel implements ActionListener, MouseInputListener {
 
         if (box != null) {
 
-            g.drawRect(box.x, box.y, box.width, box.height);
-            //g.draw(box);
+            //drawing the selection box
+            Color color = new Color(103,101,196, 60);
+            g.setColor(color);
+            g.fillRect(box.x, box.y, box.width, box.height);
         }
     }
 
